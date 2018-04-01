@@ -1,0 +1,11 @@
+.weui-badge_dot {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.weui-cell_select {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 15px;
+}

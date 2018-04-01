@@ -1,0 +1,97 @@
+<!--pages/setting.wxml-->
+<view class="page__hd">
+  <view class="page__title">Hello, geek</view>
+  <view class="page__desc">
+    <text>能点进这个页面，兄台你一定气质不凡\n</text>
+    <text>请先阅读以下说明：\n</text>
+    <text>1、本小程序不保存数据，请牢记参数\n</text>
+    <text>2、字符串的位数编号从0开始，你懂的\n</text>
+    <text>3、同一特殊符号替换多位，用半角逗号","隔开</text>
+  </view>
+</view>
+
+<view class="page__bd">
+
+  <view class="weui-cells__title">参数设置</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">哈希算法</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker mode="selector" value="{{setting.mode}}" range="{{modeArray}}" bindchange="bindModeChange">
+          <view class="weui-input">{{setting.mode}}</view>
+        </picker>
+      </view>
+      <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="mode">
+        <icon type="info" size="19"></icon>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-cells__title">截取范围</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">开始位置</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" placeholder="负数为从后往前数" value='{{setting.sub.start}}' bindchange="bindSubStartChange" />
+      </view>
+      <view class="weui-cell__ft" wx:if="{{!chkInput.sub.start}}">
+        <icon type="warn" size="19"></icon>
+      </view> 
+    </view>
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">截取长度</view>
+      </view>
+      <view class="weui-cell__bd">
+        <input class="weui-input" placeholder="输入大于0的整数" value='{{setting.sub.length}}' bindchange="bindSubLengthChange" />
+      </view>
+      <view class="weui-cell__ft" wx:if="{{!chkInput.sub.length}}">
+        <icon type="warn" size="19"></icon>
+      </view>
+    </view>
+  </view>
+
+  <view class="weui-cells__title">特殊字符位置</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view wx:for="{{setting.special}}" wx:for-index="idx" wx:for-item="specObj" class="weui-cell weui-cell_select">
+      <view class="weui-cell__hd" style="width: 64px; text-align: center;">
+        <picker bindchange="bindSpecialCharChange" value="{{specObj.char}}" range="{{specialCharArray}}" data-index="{{idx}}">
+          <view class="weui-select">{{specObj.char}}</view>
+        </picker>
+      </view>
+      <view class="weui-cell__bd weui-cell__bd_in-select-before">
+        <input class="weui-input" placeholder='多位用","隔开' value='{{specObj.pos}}' data-index="{{idx}}" bindchange="bindSpecialPosChange" />
+      </view>
+      <view class="weui-cell__ft" wx:if="{{!chkInput.special[idx]}}">
+        <icon type="warn" size="19"></icon>
+      </view> 
+    </view>
+    <view class="weui-cell weui-cell_link" wx:if="{{showSpecialAdd}}" >
+        <view class="weui-cell__bd">
+          <text bindtap='bindSpecialAdd'>添加更多</text>
+        </view>
+    </view>
+  </view>
+
+  <view class="weui-cells__title">大小写</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__hd">
+        <view class="weui-label">位置</view>
+      </view>
+      <view class="weui-cell__bd">
+        <picker mode="selector" range="{{capitalAarry}}" value="" bindchange="bindCapitalChange">
+          <view class="weui-input">{{capitalAarry[capitalIndex]}}</view>
+        </picker>
+      </view>
+    </view>
+  </view>
+
+  <view class="button-sp-area">
+    <button class="weui-btn" type="primary" plain="true" bindtap='bindConfirm'>保存设置</button>
+  </view>
+</view>

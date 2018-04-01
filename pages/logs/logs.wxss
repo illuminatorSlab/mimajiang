@@ -1,0 +1,11 @@
+.credit {
+  font-weight: bold;
+  padding-left: 1em;
+}
+
+.log-item {
+  margin: 10px;
+  font-size: 12px;
+  padding-left: 3em;
+  color: #888888;
+}

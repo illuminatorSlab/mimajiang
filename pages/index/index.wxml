@@ -1,0 +1,98 @@
+<!--index.wxml-->
+
+<view class="page__hd" bindtap='bindViewDesc'>
+  <view class="page__title">我为毛要用这个小程序</view>
+  <view class="page__desc" wx:if="{{!viewDesc}}">
+    <icon type="search" color='red'></icon>
+    <text> 点我查看</text>
+  </view>
+  <view class="page__desc" wx:if="{{viewDesc}}">
+    <icon type="clear" color='red'></icon>
+    <text> 点我关闭提示\n</text>
+    <text>1、信息安全专家建议不要重复使用同一密码（或使用同一个密码的变种）\n</text>
+    <text>2、可是谁记得住几十个复杂密码！\n</text>
+    <text>3、本程序提供默认算法，【为不同网站/账户设置密码名 + 统一密码】一键重复生成复杂密码 \n</text>
+    <text>4、从此不再担心黑客破解或忘记密码！\n</text>
+    <text>5、本程序不保存参数和密码，请放心使用\n</text>
+    <text>6、使用结束后请记得回来清空剪贴板，以防其他应用监听\n</text>
+  </view>
+</view>
+
+<view class="container">
+  <view class="weui-cells__title">密码名</view>
+  <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+              <input class="weui-input" placeholder="简单易记，如myQQ" value='{{text}}' bindchange="bindTextChange"/>
+          </view>
+          <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="text">
+              <icon type="info" size="19"></icon>
+          </view>
+      </view>
+  </view>
+
+  <view class="weui-cells__title">加密设置</view>
+  <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">统一密码</view>
+          </view>
+          <view class="weui-cell__bd">
+              <input class="weui-input" placeholder="私密信息，如miziko" value='{{key}}' bindchange="bindKeyChange"/>
+          </view>
+          <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="key">
+              <icon type="info" size="19"></icon>
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">生成方式</view>
+          </view>
+          <view class="weui-cell__bd">
+              <picker mode="selector" value=""  range="{{pickerAarry}}" bindchange="bindModeChange">
+                  <view class="weui-input">{{pickerAarry[pickerValue]}}</view>
+              </picker>
+          </view>
+          <view class="weui-cell__ft" bindtap='bindHintTap'  data-hint="mode">
+              <icon type="info" size="19"></icon>
+          </view>
+      </view>
+  </view>
+  <view class="weui-cells__tips">点击右侧蓝色信息按钮查看说明</view>
+
+  <view class="button-sp-area">
+    <button class="weui-btn" type="primary" plain="true" bindtap='generateButton'>生成密码</button>
+  </view>
+  
+  <view class="weui-cells__title">密码</view>
+  <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__bd">
+              <input class="weui-input" placeholder="" value='{{pwd}}' bindchange="bindPwdChange"/>
+          </view>
+      </view>
+  </view>
+
+  <view class="weui-flex">
+    <view class="weui-flex__item">
+      <view class="button-placeholder">
+        <button class="weui-btn mini-btn" type="primary" size="mini" bindtap='bindCopy'>复制到剪贴板</button>
+      </view>      
+    </view>
+    <view class="weui-flex__item">
+      <view class="button-placeholder">
+        <button class="weui-btn mini-btn" type="warn" size="mini" bindtap='bindClear'><icon type="warn" size="16" color='#FFF'></icon> 清空剪贴板</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<view class="weui-footer">
+<!-- weui-footer_fixed-bottom -->
+  <view class="weui-footer__links">
+      <navigator url="../logs/logs" class="weui-footer__link">光語工作室 & RUCSFC</navigator>
+  </view>
+  <view class="weui-footer__text">
+    Thanks to <text selectable='true'>gwjjeff/cryptojs.git</text>
+  </view>
+</view>
