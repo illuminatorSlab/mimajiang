@@ -2,13 +2,22 @@
 //获取应用实例
 var app = getApp()
 
+// 页首提示语
+var headerTips = [
+  "信息安全专家建议不要重复使用同一密码（或同一个密码的变种），否则密码类似的账户会有被连环攻破的风险",
+  "可是谁记得住几十个复杂密码！",
+  "本计算器，可根据【网站/APP名】+【统一密码】一键生成复杂密码，只需记住两个参数即可重复获得相同输出",
+  "本程序不保存参数和密码，请放心使用",
+  "使用结束后请记得【清空剪贴板】，以防其他应用监听"
+];
+
 // 引入加密模块
 var Crypto = require('../../utils/cryptojs/cryptojs.js').Crypto;
 
 // 设置预设值
 const preset = [
   {
-    name: "预设1(16位)",
+    name: "16位密码",
     mode: "SHA256",
     sub: {
       start: 29,
@@ -27,7 +36,7 @@ const preset = [
     capital: "odd"
   },
   {
-    name: "预设2(14位)",
+    name: "14位密码",
     mode: "SHA1",
     sub: {
       start: 5,
@@ -42,7 +51,7 @@ const preset = [
     capital: "even"
   },
   {
-    name: "预设3(12位)",
+    name: "12位密码",
     mode: "MD5",
     sub: {
       start: -12,
@@ -60,19 +69,19 @@ const preset = [
 
 // 设置错误提示
 const errorMsg = {
-  noText: "请输入明文",
+  noText: "请输入APP名称",
   noMode: "请选择生成密码方式"
 }
 
 // 设置确认提示
 const confirmMsg = {
-  noKey: "未输入密钥，将降低生成密码的安全性"
+  noKey: "未输入统一密码，将降低生成密码的安全性"
 }
 
 // 设置提示语
 const hintMsg = {
-  text: "简单易记，如myQQ、我的微信，被人知道也无所谓啦，区分大小写、支持中文",
-  key: "建议选取比较私密的信息，区分大小写，一定要记住并妥善保存",
+  text: "推荐使用简单易记的网站/APP简称（大小写敏感）：如myQQ、我的微信",
+  key: "请牢记并保密，建议选取较私密的信息（大小写敏感，支持中文）",
   mode: "请选择预设或自定义设置"
 }
 
@@ -84,6 +93,7 @@ const capticalHint = {
 
 Page({
   data: {
+    headerTips: headerTips,
     viewDesc: false,
     pickerAarry: [],
     pickerValue: 0,
@@ -247,7 +257,7 @@ Page({
     if (wx.canIUse("setClipboardData")) {
       // 可以调用剪贴板
       wx.setClipboardData({
-        data: "  ",
+        data: " ",
         success: function () {
           wx.showToast({
             title: '清空完成',

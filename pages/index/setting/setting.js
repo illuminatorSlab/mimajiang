@@ -2,6 +2,14 @@
 //获取应用实例
 var app = getApp()
 
+// 页首提示语
+var headerTips = [
+  "本计算器不保存数据，请牢记参数",
+  "字符串的位数编号从0开始，你懂的",
+  "负数开始位置代表从后往前数",
+  "同一特殊符号替换多位，用半角逗号\",\"隔开"
+];
+
 // 定义哈希字串最大长度
 const maxLength = {
   MD5: 32,
@@ -30,8 +38,10 @@ Page({
    * 页面的初始数据
    */
   data: {
+    headerTips: headerTips,
     setting: null,
     modeArray: Object.keys(maxLength),
+    maxLength: maxLength,
     specialCharArray: specialChar.split(""),
     showSpecialAdd: true,
     capitalAarry: ["奇数位", "偶数位", "无大写字母"],
@@ -124,6 +134,7 @@ Page({
 
     var chkInput = this.data.chkInput;
     chkInput.sub.start = chk;
+    chkInput.sub.length = chk;
     this.setData({
       chkInput: chkInput
     });
@@ -164,7 +175,14 @@ Page({
     var chk = this.checkSubLength(setting.sub.length)
 
     var chkInput = this.data.chkInput;
+    chkInput.sub.start = chk;
     chkInput.sub.length = chk;
+
+    // 检查插入字符位置是否有误
+    for (var i in this.data.setting.special) {
+      chkInput.special[i] = this.data.setting.special[i].pos.every(this.checkSpecialPos);
+    }
+
     this.setData({
       chkInput: chkInput
     });
@@ -199,7 +217,7 @@ Page({
 
   // 特殊字符更改
   bindSpecialCharChange: function (e) {
-    console.log(e);
+    // console.log(e);
     var chr = specialChar.charAt(e.detail.value);
     var index = e.currentTarget.dataset.index;
 

@@ -4,9 +4,7 @@
   <view class="page__desc">
     <text>能点进这个页面，兄台你一定气质不凡\n</text>
     <text>请先阅读以下说明：\n</text>
-    <text>1、本小程序不保存数据，请牢记参数\n</text>
-    <text>2、字符串的位数编号从0开始，你懂的\n</text>
-    <text>3、同一特殊符号替换多位，用半角逗号","隔开</text>
+    <text wx:for="{{headerTips}}" wx:for-item="tip" wx:for-index="idx">{{idx}}、{{tip}}\n</text>
   </view>
 </view>
 
@@ -20,12 +18,12 @@
       </view>
       <view class="weui-cell__bd">
         <picker mode="selector" value="{{setting.mode}}" range="{{modeArray}}" bindchange="bindModeChange">
-          <view class="weui-input">{{setting.mode}}</view>
+          <view class="weui-input">{{setting.mode}}（最长{{maxLength[setting.mode]}}位）</view>
         </picker>
       </view>
-      <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="mode">
+      <!-- <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="mode">
         <icon type="info" size="19"></icon>
-      </view>
+      </view> -->
     </view>
   </view>
 
@@ -92,6 +90,6 @@
   </view>
 
   <view class="button-sp-area">
-    <button class="weui-btn" type="primary" plain="true" bindtap='bindConfirm'>保存设置</button>
+    <button class="weui-btn" type="primary" plain="true" bindtap='bindConfirm'>设定完毕</button>
   </view>
 </view>

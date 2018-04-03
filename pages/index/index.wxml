@@ -1,7 +1,7 @@
 <!--index.wxml-->
 
 <view class="page__hd" bindtap='bindViewDesc'>
-  <view class="page__title">我为毛要用这个小程序</view>
+  <view class="page__title">我为啥要用这个计算器</view>
   <view class="page__desc" wx:if="{{!viewDesc}}">
     <icon type="search" color='red'></icon>
     <text> 点我查看</text>
@@ -9,19 +9,34 @@
   <view class="page__desc" wx:if="{{viewDesc}}">
     <icon type="clear" color='red'></icon>
     <text> 点我关闭提示\n</text>
-    <text>1、信息安全专家建议不要重复使用同一密码（或使用同一个密码的变种）\n</text>
-    <text>2、可是谁记得住几十个复杂密码！\n</text>
-    <text>3、本程序提供默认算法，【为不同网站/账户设置密码名 + 统一密码】一键重复生成复杂密码 \n</text>
-    <text>4、从此不再担心黑客破解或忘记密码！\n</text>
-    <text>5、本程序不保存参数和密码，请放心使用\n</text>
-    <text>6、使用结束后请记得回来清空剪贴板，以防其他应用监听\n</text>
+    <text wx:for="{{headerTips}}" wx:for-item="tip" wx:for-index="idx">{{idx}}、{{tip}}\n</text>
   </view>
 </view>
 
 <view class="container">
-  <view class="weui-cells__title">密码名</view>
+  <!-- <view class="weui-cells__title">密码名</view>
+  <view class="weui-cells weui-cells_after-title">
+  </view> -->
+
+  <view class="weui-cells__title">计算参数设置</view>
   <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">我想生成</view>
+          </view>
+          <view class="weui-cell__bd">
+              <picker mode="selector" value=""  range="{{pickerAarry}}" bindchange="bindModeChange">
+                  <view class="weui-input">{{pickerAarry[pickerValue]}}</view>
+              </picker>
+          </view>
+          <view class="weui-cell__ft" bindtap='bindHintTap'  data-hint="mode">
+              <icon type="info" size="19"></icon>
+          </view>
+      </view>
+      <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+              <view class="weui-label">APP名称</view>
+          </view>
           <view class="weui-cell__bd">
               <input class="weui-input" placeholder="简单易记，如myQQ" value='{{text}}' bindchange="bindTextChange"/>
           </view>
@@ -29,10 +44,6 @@
               <icon type="info" size="19"></icon>
           </view>
       </view>
-  </view>
-
-  <view class="weui-cells__title">加密设置</view>
-  <view class="weui-cells weui-cells_after-title">
       <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
               <view class="weui-label">统一密码</view>
@@ -41,19 +52,6 @@
               <input class="weui-input" placeholder="私密信息，如miziko" value='{{key}}' bindchange="bindKeyChange"/>
           </view>
           <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="key">
-              <icon type="info" size="19"></icon>
-          </view>
-      </view>
-      <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-              <view class="weui-label">生成方式</view>
-          </view>
-          <view class="weui-cell__bd">
-              <picker mode="selector" value=""  range="{{pickerAarry}}" bindchange="bindModeChange">
-                  <view class="weui-input">{{pickerAarry[pickerValue]}}</view>
-              </picker>
-          </view>
-          <view class="weui-cell__ft" bindtap='bindHintTap'  data-hint="mode">
               <icon type="info" size="19"></icon>
           </view>
       </view>
