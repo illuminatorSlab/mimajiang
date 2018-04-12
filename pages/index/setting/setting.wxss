@@ -1,6 +1,6 @@
-.weui-badge_dot {
-  margin-left: 5px;
-  margin-right: 5px;
+.header-tips:nth-child(3) {
+  color: #E64340;
+  font-weight: bolder;
 }
 
 .weui-cell_select {

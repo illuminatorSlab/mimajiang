@@ -14,9 +14,6 @@
 </view>
 
 <view class="container">
-  <!-- <view class="weui-cells__title">密码名</view>
-  <view class="weui-cells weui-cells_after-title">
-  </view> -->
 
   <view class="weui-cells__title">计算参数设置</view>
   <view class="weui-cells weui-cells_after-title">
@@ -35,7 +32,7 @@
       </view>
       <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
-              <view class="weui-label">APP名称</view>
+              <view class="weui-label">APP简称</view>
           </view>
           <view class="weui-cell__bd">
               <input class="weui-input" placeholder="简单易记，如myQQ" value='{{text}}' bindchange="bindTextChange"/>

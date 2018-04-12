@@ -4,24 +4,22 @@ var app = getApp()
 
 // 页首提示语
 var headerTips = [
-  "本计算器不保存数据，请牢记参数",
+  "本计算器不保存设定，请牢记参数！牢记参数！",
+  "字母位数会根据密码长度和数字位数自动计算得出",
   "字符串的位数编号从0开始，你懂的",
-  "负数开始位置代表从后往前数",
   "同一特殊符号替换多位，用半角逗号\",\"隔开"
 ];
 
-// 定义哈希字串最大长度
-const maxLength = {
-  MD5: 32,
-  SHA1: 40,
-  SHA256: 64
+// 定义生成密码最大长度
+const lengthLimit = {
+  maxL: 18,
+  minL: 8,
+  maxNL: 10,
+  minNL: 2
 }
 
 // 定义特殊字符
 const specialChar = "!@#$%^&*()_+-={}[]\:;<>?,./";
-
-// 定义大小写模式
-const capitalMode = ["odd", "even", "none"]
 
 // 设置错误提示
 const errorMsg = {
@@ -40,24 +38,13 @@ Page({
   data: {
     headerTips: headerTips,
     setting: null,
-    modeArray: Object.keys(maxLength),
-    maxLength: maxLength,
+    lengthLimit: lengthLimit,
+    blockSize: 17,
     specialCharArray: specialChar.split(""),
     showSpecialAdd: true,
-    capitalAarry: ["奇数位", "偶数位", "无大写字母"],
-    capitalIndex: null,
     chkInput: {
-      sub:{
-        start: true,
-        length: true
-      },
       special: [true, true, true]
     }
-  },
-
-  // 获得模式提示信息
-  getModeHints: function(){
-    return "当前算法产生字串长度为" + maxLength[this.data.setting.mode] +"位";
   },
 
   // 提示信息
@@ -87,112 +74,40 @@ Page({
     });
   },
 
-  // 算法更改
-  bindModeChange: function(e){
+  // 密码长度更改
+  bindLengthChange: function(e){
     var setting = this.data.setting;
-    setting.mode = this.data.modeArray[e.detail.value];
+    setting.length = e.detail.value;
+    
+    if (setting.length_num > setting.length - 2) {
+      // 留给字符的位数少于两位
+      setting.length_num = setting.length - 2
+    }
     this.setData({
       setting: setting
     });
 
+    // 检查输入框
     this.checkAllInput();
   },
 
-  // 检查截取是否成功
-  checkSub: function (start, length) {
-    if ((start < 0) && (-start < length)) {
-      // 负数超界
-      return false;
-    } else if (start + length > maxLength[this.data.setting.mode]){
-      // 正数超界
+  // 检查数字位数是否合规
+  checkLengthNum: function(lengthNum){
+    if (lengthNum > this.setting.length - 2) {
+      // 留给字符的位数少于两位
       return false;
     } else {
       return true;
     }
   },
 
-  // 检查范围开始值
-  checkSubStart: function (val) {
-    if (isNaN(val)) {
-      // 输入非数字
-      this.throwError(errorMsg.inputNaN);
-      return false;
-    } else if (!this.checkSub(val, this.data.setting.sub.length)) {
-      // 截取长度大于字符串最大长度
-      this.throwError(errorMsg.maxLength);
-      return false;
-    } else {
-      return true;
-    }
-  },
-
-  // 截取范围开始值更改
-  bindSubStartChange: function(e){
+  // 绑定数字位数更改
+  bindLengthNumChange: function(e) {
     var setting = this.data.setting;
-    setting.sub.start = parseInt(e.detail.value);
-    var chk = this.checkSubStart(setting.sub.start)
-
-    var chkInput = this.data.chkInput;
-    chkInput.sub.start = chk;
-    chkInput.sub.length = chk;
+    setting.length_num = e.detail.value;
     this.setData({
-      chkInput: chkInput
+      setting: setting
     });
-
-    if (chk){
-      // 输入正确
-      this.setData({
-        setting: setting
-      });
-    }
-  },
-
-  // 检查截取范围长度
-  checkSubLength: function (val) {
-    if (isNaN(val)) {
-      // 输入非数字
-      this.throwError(errorMsg.inputNaN);
-      return false;
-    } else if (val < 1) {
-      // 输入长度
-      this.throwError(errorMsg.inputZero);
-      return false;
-    } else if (!this.checkSub(this.data.setting.sub.start, val)) {
-      // 截取长度大于字符串最大长度
-      this.throwError(errorMsg.maxLength);
-      return false;
-    } else {
-      // 输入正确
-      return true;
-    }
-  },
-
-  // 截取范围长度更改
-  bindSubLengthChange: function(e){
-    var setting = this.data.setting;
-    setting.sub.length = parseInt(e.detail.value);
-
-    var chk = this.checkSubLength(setting.sub.length)
-
-    var chkInput = this.data.chkInput;
-    chkInput.sub.start = chk;
-    chkInput.sub.length = chk;
-
-    // 检查插入字符位置是否有误
-    for (var i in this.data.setting.special) {
-      chkInput.special[i] = this.data.setting.special[i].pos.every(this.checkSpecialPos);
-    }
-
-    this.setData({
-      chkInput: chkInput
-    });
-
-    if (chk) {
-      // 输入正确
-      this.setData({
-        setting: setting
-      });
-    }
   },
 
   // 检查特殊字符
@@ -241,7 +156,7 @@ Page({
     } else if (p < 0){
       // 输入负数
       return false;
-    } else if (p > this.data.setting.sub.length - 1){
+    } else if (p > this.data.setting.length - 1){
       // 输入超界
       return false;
     } else {
@@ -303,33 +218,14 @@ Page({
     }
   },
 
-  // 更改大写位置设置
-  bindCapitalChange: function (e) {
-    var capitalIndex = e.detail.value;
-    var setting = this.data.setting;
-    setting.capital = capitalMode[capitalIndex];
-
-    // 写入设置
-    this.setData({
-      setting: setting, 
-      capitalIndex: capitalIndex
-    });
-  },
-
   // 检查所有输入框
   checkAllInput: function(){
-    var chkSubStart = this.checkSubStart(this.data.setting.sub.start);
-    var chkSubLength = this.checkSubLength(this.data.setting.sub.length);
     var chkSpecial = [true, true, true];
     for (var x in this.data.setting.special) {
       chkSpecial[x] = this.data.setting.special[x].pos.every(this.checkSpecialPos);
     }
 
     var chkInput = {
-      sub: {
-        start: chkSubStart,
-        length: chkSubLength
-      },
       special: chkSpecial
     }
 
@@ -337,16 +233,14 @@ Page({
       chkInput: chkInput
     });
 
-    return chkSubStart && chkSubLength && chkSpecial.every(function(val){ return val;});
+    return chkSpecial.every(function(val){ return val;});
   },
 
   // 检查是否还有输入框未修正
   checkInputError: function(){
-    var chkSubStart = this.data.chkInput.sub.start;
-    var chkSubLength = this.data.chkInput.sub.length;
     var chkSpecial = this.data.chkInput.special;
 
-    return chkSubStart && chkSubLength && chkSpecial.every(function (val) { return val; });
+    return chkSpecial.every(function (val) { return val; });
   },
 
   /**
@@ -355,6 +249,7 @@ Page({
   bindConfirm: function() {
     if (this.checkInputError()) {
       app.globalData.settingData = this.data.setting;
+      app.globalData.settingData.name = "自定义";
       wx.navigateBack();
     } else {
       this.throwError(errorMsg.inputError);
@@ -364,11 +259,10 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onLoad: function () {
     // 初始化数据
     this.setData({
       setting: app.globalData.settingData,
-      capitalIndex: capitalMode.indexOf(app.globalData.settingData.capital),
       showSpecialAdd: (app.globalData.settingData.special.length < 3)
     });
   },

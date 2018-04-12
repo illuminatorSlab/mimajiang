@@ -6,10 +6,30 @@ var app = getApp()
 var headerTips = [
   "信息安全专家建议不要重复使用同一密码（或同一个密码的变种），否则密码类似的账户会有被连环攻破的风险",
   "可是谁记得住几十个复杂密码！",
-  "本计算器，可根据【网站/APP名】+【统一密码】一键生成复杂密码，只需记住两个参数即可重复获得相同输出",
+  "本计算器，可根据【网站/APP】+【统一密码】一键生成复杂密码，只需记住两个参数即可重复获得相同输出",
   "本程序不保存参数和密码，请放心使用",
   "使用结束后请记得【清空剪贴板】，以防其他应用监听"
 ];
+
+// 设置错误提示
+const errorMsg = {
+  noText: "请输入APP简称",
+  noMode: "请选择生成密码方式"
+}
+
+// 设置确认提示
+const confirmMsg = {
+  noKey: "未输入“统一密码”，将降低生成密码的安全性"
+}
+
+// 设置提示语
+const hintMsg = {
+  text: "推荐使用简单易记的网站/APP简称（大小写敏感）：如myQQ、我的微信",
+  key: "请牢记并保密，建议选取较私密的信息（大小写敏感，支持中文）"
+}
+
+// 阶乘数表
+const factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600, 6227020800, 87178291200, 1307674368000, 20922789888000, 355687428096000, 6402373705728000]
 
 // 引入加密模块
 var Crypto = require('../../utils/cryptojs/cryptojs.js').Crypto;
@@ -17,12 +37,20 @@ var Crypto = require('../../utils/cryptojs/cryptojs.js').Crypto;
 // 设置预设值
 const preset = [
   {
-    name: "16位密码",
-    mode: "SHA256",
-    sub: {
-      start: 29,
-      length: 16
-    },
+    name: "15位密码",
+    length: 15,
+    length_num: 9,
+    special: [
+      {
+        char: "_",
+        pos: [13]
+      }
+    ]
+  },
+  {
+    name: "18位密码",
+    length: 18,
+    length_num: 7,
     special: [
       {
         char: "_",
@@ -32,64 +60,20 @@ const preset = [
         char: "@",
         pos: [10]
       }
-    ],
-    capital: "odd"
-  },
-  {
-    name: "14位密码",
-    mode: "SHA1",
-    sub: {
-      start: 5,
-      length: 14
-    },
-    special: [
-      {
-        char: "_",
-        pos: [8]
-      }
-    ],
-    capital: "even"
+    ]
   },
   {
     name: "12位密码",
-    mode: "MD5",
-    sub: {
-      start: -12,
-      length: 12
-    },
+    length: 12,
+    length_num: 4,
     special: [
       {
         char: "_",
-        pos: [7]
+        pos: [3]
       }
-    ],
-    capital: "odd"
+    ]
   }
 ]
-
-// 设置错误提示
-const errorMsg = {
-  noText: "请输入APP名称",
-  noMode: "请选择生成密码方式"
-}
-
-// 设置确认提示
-const confirmMsg = {
-  noKey: "未输入统一密码，将降低生成密码的安全性"
-}
-
-// 设置提示语
-const hintMsg = {
-  text: "推荐使用简单易记的网站/APP简称（大小写敏感）：如myQQ、我的微信",
-  key: "请牢记并保密，建议选取较私密的信息（大小写敏感，支持中文）",
-  mode: "请选择预设或自定义设置"
-}
-
-const capticalHint = {
-  odd: "奇数位", 
-  even: "偶数位",
-  none: "无大写字母"
-}
 
 Page({
   data: {
@@ -112,13 +96,18 @@ Page({
   getSettingHint: function(setting) {
     // console.log(setting);
     var str = "当前密码生成模式为“" + setting.name + "”：";
-    str += setting.mode + "算法；";
-    str += "从第" + setting.sub.start + "位开始截取" + setting.sub.length + "位字符串；";
+    str += "总长度" + setting.length + "位，";
+    str += "其中数字" + setting.length_num + "位，";
+
+    var length_lower = Math.floor((setting.length - setting.length_num) / 2);
+    var length_upper = setting.length - setting.length_num - length_lower;
+
+    str += "小写字母" + length_lower + "位，";
+    str += "大写字母" + length_upper + "位，";
+
     for (var i in setting.special){
       str += "特殊符号" + setting.special[i].char + "替换第" + setting.special[i].pos.join(",") + "位；";
     }
-
-    str += "大写字母：" + capticalHint[setting.capital];
 
     return str;
   },
@@ -140,7 +129,8 @@ Page({
       case "mode":
         // 设置提示
         if (this.data.pickerValue != null) {
-          var setting = this.getGeneratrSetting();
+          var setting = this.getGenerateSetting();
+          console.log(setting);
           msg = this.getSettingHint(setting);
           // console.log(msg);
         } else {
@@ -181,9 +171,8 @@ Page({
       // console.log(app.globalData.settingData);
       if (app.globalData.settingData == null) {
         // 自定义模式未设置
-        
-        app.globalData.settingData = preset[2];
-        app.globalData.settingData.name = "自定义";
+        app.globalData.settingData = preset[0];
+        console.log(preset);
       }
 
       wx.showLoading({
@@ -193,6 +182,9 @@ Page({
       wx.navigateTo({
         url: 'setting/setting'
       })
+    } else {
+      // 修改自定义模式为当前预设值
+      app.globalData.settingData = preset[e.detail.value];
     }
   },
 
@@ -305,6 +297,7 @@ Page({
 
     return res;
   },
+  
   // 替换字符串内字符
   replacePos: function (strObj, pos, replacetext) {
     var str = strObj.substring(0, pos) + replacetext + strObj.substring(pos+1);
@@ -312,8 +305,9 @@ Page({
   },
 
   // 获取生成密码设定
-  getGeneratrSetting: function(){
+  getGenerateSetting: function(){
     var mode = this.data.pickerValue;
+    console.log(preset);
     if (mode < preset.length) {
       // 使用预设
       return preset[mode]
@@ -323,43 +317,127 @@ Page({
     }
   },
 
+  // 十进制转二进制字符串前补零
+  decToBinString: function(val) {
+    var str = val.toString(2);
+    var strZero = "00000000";
+    return strZero.substr(0, 8 - str.length) + str;
+  },
+
+  // 二进制字符串转数字字符串
+  binToDexString: function(str, length) {
+    // console.log(str);
+    var decStr = parseInt(str, 2).toString();
+    while (decStr.length < length) {
+      decStr = "0" + decStr;
+    }
+    return decStr.substr(-length, length);
+  },
+
+  // 二进制字符串转字母字符串
+  binToLetterString: function (str, length, isLower) {
+    // console.log(str);
+    var dividend = parseInt(str, 2);
+    var divisor = 26;
+    var remainder;
+    var startCharCode = isLower ? "a".charCodeAt(0) : "A".charCodeAt(0);
+    var res = "";
+
+    while (dividend > 0){
+      remainder = dividend % divisor;
+      res += String.fromCharCode((startCharCode + remainder));
+
+      dividend = Math.floor(dividend / divisor);
+    }
+
+    while (res.length < length) {
+      res = String.fromCharCode(startCharCode) + res;
+    }
+
+    return res.substr(-length, length);
+  },
+
+  // 字符串洗牌
+  shuffle: function(str, randomSeed){
+    var strArray = str.split("");
+    var dividend = randomSeed;
+    // console.log(randomSeed);
+    var n = str.length;
+    var remainder, temp;
+
+    while (n > 1) {
+      // 取模
+      remainder = dividend % n;
+      dividend = Math.floor(dividend / n--);
+
+      // 交换
+      temp = strArray[n];
+      strArray[n] = strArray[remainder];
+      strArray[remainder] = temp;
+    }
+
+    return strArray.join("");
+  },
+
   // 生成密码
-  generateCode: function() {
+  generateCode: function () {
     // 生成方式
-    var setting = this.getGeneratrSetting();
+    var setting = this.getGenerateSetting();
     // console.log(setting);
 
     // 哈希函数选择
-    var hashFunction;
-    switch (setting.mode) {
-      case "MD5":
-        hashFunction = Crypto.MD5;
-        break;
-      case "SHA1":
-        hashFunction = Crypto.SHA1;
-        break;
-      case "SHA256":
-        hashFunction = Crypto.SHA256;
-        break;
-    }
-    
+    var hashFunction = Crypto.SHA256;
+
     // 哈希
-    var strHash = "";
+    var hashRes = "";
+    var hashOptions = {
+      asBytes: true
+    }
     if (this.data.key.length > 0) {
       // HMAC
-      strHash = Crypto.HMAC(hashFunction, this.data.text, this.data.key);
+      hashRes = Crypto.HMAC(hashFunction, this.data.text, this.data.key, hashOptions);
     } else {
       // 普通
-      strHash = hashFunction(this.data.text)
+      hashRes = hashFunction(this.data.text, hashOptions)
     }
     // console.log(hashFunction);
-    // console.log(strHash);
+    // console.log(hashRes);
+    hashRes = hashRes.map(this.decToBinString);
+    var hashStrBin = hashRes.map(this.decToBinString).join("");
+    // console.log(hashStrBin);
 
-    // 截取
-    var strSub = strHash.substr(setting.sub.start, setting.sub.length);
+    // 生成数字
+    var length_num = setting.length_num;
+    var length_num_strbin = Math.ceil(Math.log2(Math.pow(10, length_num) - 1));
+    var strbin_num = hashStrBin.substr(0, length_num_strbin);
+    var pwdNum = this.binToDexString(strbin_num, length_num);
+    // console.log(pwdNum);
+
+    // 生成小写字符串
+    var length_lower = Math.floor((setting.length - length_num) / 2);
+    var length_lower_strbin = Math.ceil(Math.log2(Math.pow(26, length_lower) - 1));
+    var strbin_lower = hashStrBin.substr(length_num_strbin, length_lower_strbin);
+    var pwdLower = this.binToLetterString(strbin_lower, length_lower, true);
+    // console.log(pwdLower);
+
+    // 生成大写字符串
+    var length_upper = setting.length - length_num - length_lower;
+    var length_upper_strbin = Math.ceil(Math.log2(Math.pow(26, length_upper) - 1));
+    var strbin_upper = hashStrBin.substr(length_num_strbin + length_lower_strbin, length_upper_strbin);
+    var pwdUpper = this.binToLetterString(strbin_upper, length_upper, false);
+    // console.log(pwdUpper);
+
+    var pwdStr = pwdNum + pwdLower + pwdUpper;
+    // console.log(pwdStr);
+
+    // 洗牌
+    var digit_random = Math.ceil(Math.log2(factorial[setting.length]));
+    var randomSeed = parseInt(hashStrBin.substr(length_num_strbin + length_lower_strbin + length_upper_strbin, digit_random), 2);
+    var strShuffle = this.shuffle(pwdStr, randomSeed);
+    // console.log(strShuffle);
 
     // 替换特殊字符
-    var replaceStr = strSub;
+    var replaceStr = strShuffle;
     for (var i in setting.special) {
       var x = setting.special[i].char;
       var pos = setting.special[i].pos
@@ -369,32 +447,9 @@ Page({
     }
     // console.log(replaceStr);
 
-    // 大小写
-    var pwdStr = "";
-
-    if (setting.capital == "none") {
-      // 不处理
-      pwdStr = replaceStr;
-
-    } else {
-      var lowerStr = replaceStr;
-      var capitalStr = lowerStr.toUpperCase();
-      var i = 0;
-
-      if (setting.capital == "even") {
-        // 偶数位大写
-        pwdStr += capitalStr.charAt(i++);
-      }
-      // 正常处理
-      while (i < lowerStr.length) {
-        pwdStr += lowerStr.charAt(i++);
-        pwdStr += i < capitalStr.length ? capitalStr.charAt(i++) : "";
-      }
-    }
-
-    // console.log(pwdStr);
-    return pwdStr;
+    return replaceStr;
   },
+
   // 生成按钮
   generateButton: function() {
     // 判断参数是否合法
@@ -449,7 +504,6 @@ Page({
   onLoad: function () {
     // 生成加密方式选项值
     this.generatePicker();
-    
   },
 
   /**

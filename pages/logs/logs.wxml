@@ -2,15 +2,20 @@
 <view class="page__hd">
   <view class="page__title">密码匠</view>
   <view class="page__desc">
-    <text>一个简单的密码生成小程序\n</text>
+    <text>一个简单的密码生成小程序\n生成算法请移步光語工作室微信公众号查看\n\n</text>
     <text>项目出品：\n</text>
     <text class='credit' selectable='true'>光語工作室illuminatorStudio\n</text>
     <text class='credit' selectable='true'>中国人民大学科幻协会 RUCSFC\n</text>
+    <text class='credit' selectable='true'>算法指导 DayDreamer\n\n</text>
     <text>联系方式：\n</text>
     <text>右上角菜单→关于密码匠→相关公众号</text>
   </view>
-</view>
-<view class="page__bd">
-  <view class="weui-cells__title">更新日志</view>
-  <text  wx:for="{{logs}}" wx:for-item="log" class="log-item">{{log.date}}: {{log.text}}</text>
+  <view class="page__desc">
+    <text>\n</text>
+    <text>更新日志：\n</text>
+    <view  wx:for="{{logs}}" wx:for-item="log" class="log-item">
+      <text class="log-date">{{log.date}} \n</text>
+      <text class="log-text">{{log.text}} \n</text>
+    </view>
+  </view>
 </view>

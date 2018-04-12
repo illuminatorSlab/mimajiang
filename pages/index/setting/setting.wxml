@@ -4,29 +4,42 @@
   <view class="page__desc">
     <text>能点进这个页面，兄台你一定气质不凡\n</text>
     <text>请先阅读以下说明：\n</text>
-    <text wx:for="{{headerTips}}" wx:for-item="tip" wx:for-index="idx">{{idx}}、{{tip}}\n</text>
+    <text wx:for="{{headerTips}}" wx:for-item="tip" wx:for-index="idx" class="header-tips">{{idx}}、{{tip}}\n</text>
   </view>
 </view>
 
 <view class="page__bd">
 
-  <view class="weui-cells__title">参数设置</view>
+  <!-- <view class="weui-cells__title">参数设置</view>
   <view class="weui-cells weui-cells_after-title">
     <view class="weui-cell weui-cell_input">
       <view class="weui-cell__hd">
-        <view class="weui-label">哈希算法</view>
+        <view class="weui-label">密码长度</view>
       </view>
       <view class="weui-cell__bd">
-        <picker mode="selector" value="{{setting.mode}}" range="{{modeArray}}" bindchange="bindModeChange">
-          <view class="weui-input">{{setting.mode}}（最长{{maxLength[setting.mode]}}位）</view>
-        </picker>
+        <slider show-value value="{{setting.length}}" min="{{lengthLimit.minL}}" max="{{lengthLimit.maxL}}"/>
       </view>
-      <!-- <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="mode">
-        <icon type="info" size="19"></icon>
-      </view> -->
+    </view>
+  </view> -->
+
+  <view class="weui-cells__title">密码长度</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__bd">
+        <slider show-value value="{{setting.length}}" min="{{lengthLimit.minL}}" max="{{lengthLimit.maxL}}" block-size="{{blockSize}}" bindchange='bindLengthChange'/>
+      </view>
     </view>
   </view>
 
+  <view class="weui-cells__title">数字位数</view>
+  <view class="weui-cells weui-cells_after-title">
+    <view class="weui-cell weui-cell_input">
+      <view class="weui-cell__bd">
+        <slider show-value value="{{setting.length_num}}" min="{{lengthLimit.minNL}}" max="{{maxlengthLimit.maxNL < setting.length - 2 ? maxlengthLimit.maxNL: setting.length - 2}}" block-size="{{blockSize}}" bindchange='bindLengthNumChange'/>
+      </view>
+    </view>
+  </view>
+<!-- 
   <view class="weui-cells__title">截取范围</view>
   <view class="weui-cells weui-cells_after-title">
     <view class="weui-cell weui-cell_input">
@@ -51,7 +64,7 @@
         <icon type="warn" size="19"></icon>
       </view>
     </view>
-  </view>
+  </view> -->
 
   <view class="weui-cells__title">特殊字符位置</view>
   <view class="weui-cells weui-cells_after-title">
@@ -72,20 +85,6 @@
         <view class="weui-cell__bd">
           <text bindtap='bindSpecialAdd'>添加更多</text>
         </view>
-    </view>
-  </view>
-
-  <view class="weui-cells__title">大小写</view>
-  <view class="weui-cells weui-cells_after-title">
-    <view class="weui-cell weui-cell_input">
-      <view class="weui-cell__hd">
-        <view class="weui-label">位置</view>
-      </view>
-      <view class="weui-cell__bd">
-        <picker mode="selector" range="{{capitalAarry}}" value="" bindchange="bindCapitalChange">
-          <view class="weui-input">{{capitalAarry[capitalIndex]}}</view>
-        </picker>
-      </view>
     </view>
   </view>
 

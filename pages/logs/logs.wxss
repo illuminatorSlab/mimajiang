@@ -1,11 +1,16 @@
 .credit {
   font-weight: bold;
   padding-left: 1em;
+  color: rgb(16, 174, 255);
 }
 
 .log-item {
   margin: 10px;
   font-size: 12px;
-  padding-left: 3em;
+  padding-left: 1em;
   color: #888888;
+}
+
+.log-text {
+  padding-left: 2em;
 }
