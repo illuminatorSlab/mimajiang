@@ -15,7 +15,7 @@
     <text>更新日志：\n</text>
     <view  wx:for="{{logs}}" wx:for-item="log" class="log-item">
       <text class="log-date">{{log.date}} \n</text>
-      <text class="log-text">{{log.text}} \n</text>
+      <text class="log-text" wx:for="{{log.texts}}" wx:for-item="text">{{text}} \n</text>
     </view>
   </view>
 </view>

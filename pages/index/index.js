@@ -1,4 +1,7 @@
 //index.js
+// 导入预设值
+import PRESET from './preset.js';
+
 //获取应用实例
 var app = getApp()
 
@@ -33,47 +36,6 @@ const factorial = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916
 
 // 引入加密模块
 var Crypto = require('../../utils/cryptojs/cryptojs.js').Crypto;
-
-// 设置预设值
-const preset = [
-  {
-    name: "15位密码",
-    length: 15,
-    length_num: 9,
-    special: [
-      {
-        char: "_",
-        pos: [13]
-      }
-    ]
-  },
-  {
-    name: "18位密码",
-    length: 18,
-    length_num: 7,
-    special: [
-      {
-        char: "_",
-        pos: [6]
-      },
-      {
-        char: "@",
-        pos: [10]
-      }
-    ]
-  },
-  {
-    name: "12位密码",
-    length: 12,
-    length_num: 4,
-    special: [
-      {
-        char: "_",
-        pos: [3]
-      }
-    ]
-  }
-]
 
 Page({
   data: {
@@ -130,7 +92,7 @@ Page({
         // 设置提示
         if (this.data.pickerValue != null) {
           var setting = this.getGenerateSetting();
-          console.log(setting);
+          // console.log(setting);
           msg = this.getSettingHint(setting);
           // console.log(msg);
         } else {
@@ -150,8 +112,8 @@ Page({
   // 生成加密方式选项值
   generatePicker: function(){
     var pickerAarry = []
-    for (var x in preset) {
-      pickerAarry.push(preset[x].name);
+    for (var x in PRESET) {
+      pickerAarry.push(PRESET[x].name);
     }
 
     pickerAarry.push("自定义");
@@ -167,12 +129,12 @@ Page({
     })
 
     // 是否为自定义模式
-    if (e.detail.value == preset.length) {
+    if (e.detail.value == PRESET.length) {
       // console.log(app.globalData.settingData);
       if (app.globalData.settingData == null) {
         // 自定义模式未设置
-        app.globalData.settingData = preset[0];
-        console.log(preset);
+        app.globalData.settingData = PRESET[0];
+        // console.log(PRESET);
       }
 
       wx.showLoading({
@@ -184,14 +146,14 @@ Page({
       })
     } else {
       // 修改自定义模式为当前预设值
-      app.globalData.settingData = preset[e.detail.value];
+      app.globalData.settingData = PRESET[e.detail.value];
     }
   },
 
   // 记录明文
   bindTextChange: function (e) {
     this.setData({
-      text: e.detail.value
+      text: e.detail.value.trim()
     })
   },
 
@@ -307,10 +269,10 @@ Page({
   // 获取生成密码设定
   getGenerateSetting: function(){
     var mode = this.data.pickerValue;
-    console.log(preset);
-    if (mode < preset.length) {
+    // console.log(PRESET);
+    if (mode < PRESET.length) {
       // 使用预设
-      return preset[mode]
+      return PRESET[mode]
     } else {
       // 自定义
       return app.globalData.settingData

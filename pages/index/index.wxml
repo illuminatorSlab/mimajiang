@@ -1,15 +1,19 @@
 <!--index.wxml-->
 
-<view class="page__hd" bindtap='bindViewDesc'>
-  <view class="page__title">我为啥要用这个计算器</view>
-  <view class="page__desc" wx:if="{{!viewDesc}}">
-    <icon type="search" color='red'></icon>
-    <text> 点我查看</text>
+<view class="page__hd">
+  <view class="page__title">我为啥要用这个计算器
+    <!-- <text class="lang">CN</text> -->
   </view>
-  <view class="page__desc" wx:if="{{viewDesc}}">
-    <icon type="clear" color='red'></icon>
-    <text> 点我关闭提示\n</text>
-    <text wx:for="{{headerTips}}" wx:for-item="tip" wx:for-index="idx">{{idx}}、{{tip}}\n</text>
+  <view bindtap='bindViewDesc'>
+    <view class="page__desc" wx:if="{{!viewDesc}}">
+      <icon type="search" color='red'></icon>
+      <text> 点我查看</text>
+    </view>
+    <view class="page__desc" wx:if="{{viewDesc}}">
+      <icon type="clear" color='red'></icon>
+      <text> 点我关闭提示\n</text>
+      <text wx:for="{{headerTips}}" wx:for-item="tip" wx:for-index="idx">{{idx}}、{{tip}}\n</text>
+    </view>
   </view>
 </view>
 
@@ -46,7 +50,7 @@
               <view class="weui-label">统一密码</view>
           </view>
           <view class="weui-cell__bd">
-              <input class="weui-input" placeholder="私密信息，如miziko" value='{{key}}' bindchange="bindKeyChange"/>
+              <input class="weui-input" placeholder="私密信息，如miziko" value='{{key}}' bindchange="bindKeyChange" type='text' password/>
           </view>
           <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="key">
               <icon type="info" size="19"></icon>

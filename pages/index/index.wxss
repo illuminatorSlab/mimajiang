@@ -1,4 +1,11 @@
 /**index.wxss**/
+.lang{
+  color: skyblue;
+  font-size: .6em;
+  padding-left: 3em;
+  text-decoration: underline;
+}
+
 .button-placeholder{
     margin: 5px;
     padding: 0 10px;
