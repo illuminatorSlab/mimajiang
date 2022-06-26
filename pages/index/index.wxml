@@ -39,7 +39,7 @@
               <view class="weui-label">APP简称</view>
           </view>
           <view class="weui-cell__bd">
-              <input class="weui-input" placeholder="简单易记，如myQQ" value='{{text}}' bindchange="bindTextChange"/>
+              <input class="weui-input" placeholder="简单易记，如myQQ" value='{{text}}' bindinput="bindTextChange"/>
           </view>
           <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="text">
               <icon type="info" size="19"></icon>
@@ -50,7 +50,7 @@
               <view class="weui-label">统一密码</view>
           </view>
           <view class="weui-cell__bd">
-              <input class="weui-input" placeholder="私密信息，如miziko" value='{{key}}' bindchange="bindKeyChange" type='text' password/>
+              <input class="weui-input" placeholder="私密信息，如miziko" value='{{key}}' bindinput="bindKeyChange" type='text' password/>
           </view>
           <view class="weui-cell__ft" bindtap='bindHintTap' data-hint="key">
               <icon type="info" size="19"></icon>

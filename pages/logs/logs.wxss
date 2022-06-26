@@ -5,9 +5,8 @@
 }
 
 .log-item {
-  margin: 10px;
+  margin: 10px 0;
   font-size: 12px;
-  padding-left: 1em;
   color: #888888;
 }
 
