@@ -35,7 +35,19 @@ const preset = [
         pos: [3]
       }
     ]
-  }
+  },
+  {
+    name: "6位数字",
+    length: 6,
+    length_num: 6,
+    special: []
+  },
+  {
+    name: "8位数字",
+    length: 8,
+    length_num: 8,
+    special: []
+  },
 ];
 
 export default preset;
